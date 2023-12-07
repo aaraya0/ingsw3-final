@@ -30,6 +30,12 @@ jobs:
         npm install
         npm test
         npm run build
+      # Upload frontend artifacts
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend
+          path: frontend/build
 
   deploy:
     needs: build
@@ -37,9 +43,10 @@ jobs:
 
     steps:
     - name: Download Artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v2
       with:
-        name: app
+        name: frontend
+        path: frontend
     - name: Output contents
       run: ls
     - name: Deploy to Server
