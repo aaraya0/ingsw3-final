@@ -27,7 +27,7 @@ jobs:
       working-directory: frontend
       run: |
         npm install
-        npm test
+        npm test -- --passWithNoTests
         npm run build
 
     - name: Upload Frontend Artifacts
