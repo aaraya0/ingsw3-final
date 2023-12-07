@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -30,12 +29,12 @@ jobs:
         npm install
         npm test
         npm run build
-      # Upload frontend artifacts
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: frontend
-          path: frontend/build
+
+    - name: Upload Frontend Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: frontend
+        path: frontend/build
 
   deploy:
     needs: build
@@ -47,8 +46,10 @@ jobs:
       with:
         name: frontend
         path: frontend
+
     - name: Output contents
       run: ls
+
     - name: Deploy to Server
       run: |
         echo "Deploy"
