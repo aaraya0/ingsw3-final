@@ -1,10 +1,10 @@
-package controllers
+package controller
 
 import (
 	"net/http"
 
-	"backend/dto"
-	"backend/service"
+	"github.com/aaraya0/ingsw3-final/backend/dto"
+	service "github.com/aaraya0/ingsw3-final/backend/services"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"

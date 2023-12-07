@@ -1,7 +1,7 @@
-package product
+package client
 
 import (
-	"backend/model"
+	"github.com/aaraya0/ingsw3-final/backend/model"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"

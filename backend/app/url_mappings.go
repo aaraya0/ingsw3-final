@@ -1,8 +1,7 @@
 package app
 
 import (
-	router "backend/app"
-	productController "backend/controller"
+	productController "github.com/aaraya0/ingsw3-final/backend/controller"
 
 	log "github.com/sirupsen/logrus"
 )

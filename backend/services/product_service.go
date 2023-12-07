@@ -1,10 +1,10 @@
 package services
 
 import (
-	prodCliente "client"
-	"dto"
-	"model"
-	e "utils/errors"
+	prodCliente "github.com/aaraya0/ingsw3-final/backend/client"
+	"github.com/aaraya0/ingsw3-final/backend/dto"
+	"github.com/aaraya0/ingsw3-final/backend/model"
+	e "github.com/aaraya0/ingsw3-final/backend/utils/errors"
 )
 
 type productService struct{}
