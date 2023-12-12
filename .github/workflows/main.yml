@@ -53,6 +53,7 @@ jobs:
       run: go mod download
 
     - name: Run Unit Tests
+      working-directory: backend  # Cambia al directorio del backend antes de ejecutar las pruebas
       run: go test ./...
 
   deploy:
