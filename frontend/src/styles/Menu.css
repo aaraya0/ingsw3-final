@@ -126,11 +126,11 @@ font-size: 20px;
 }
 @font-face {
     font-family: 'SpriteGraffiti'; /* Puedes elegir cualquier nombre */
-    src: url('./fonts/SpriteGraffiti-Shadow.otf') format('opentype'); /* Ajusta la ruta y el formato según tu fuente */
+    src: url('../fonts/SpriteGraffiti-Shadow.otf') format('opentype'); /* Ajusta la ruta y el formato según tu fuente */
   }
   @font-face {
     font-family: 'Blowbrush'; /* Puedes elegir cualquier nombre */
-    src: url('./fonts/blowbrush.regular.ttf') format('opentype'); /* Ajusta la ruta y el formato según tu fuente */
+    src: url('../fonts/blowbrush.regular.ttf') format('opentype'); /* Ajusta la ruta y el formato según tu fuente */
   }
 
 .left-side {

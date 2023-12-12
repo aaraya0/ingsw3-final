@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Menu.css';
+import '../styles/Menu.css';
 
 function Menu() {
   const [products, setProducts] = useState([]);
@@ -30,7 +30,7 @@ function Menu() {
         muted
         className="background-video"
       >
-        <source src="images/background-video.mp4" type="video/mp4"/>
+        <source src="../images/background-video.mp4" type="video/mp4"/>
         Tu navegador no soporta el elemento de video.
       </video>
       </div>
