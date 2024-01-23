@@ -1,6 +1,23 @@
-package db
+/*package db
 
 import (
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	prodCliente "github.com/aaraya0/ingsw3-final/backend/client"
 	"github.com/aaraya0/ingsw3-final/backend/model"
 	log "github.com/sirupsen/logrus"
@@ -15,8 +32,8 @@ var (
 
 func init() {
 	// Modifica el DSN para usar el usuario aaraya0, contraseña root y la base de datos fastfood
-	dsn := "root:aaraya0@tcp(127.0.0.1:3306)/?charset=utf8mb4&parseTime=True&loc=Local"
-
+	// dsn := "root:aaraya0@tcp(127.0.0.1:3306)/?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:@tcp(127.0.0.1:3307)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	// Selecciona la base de datos recién creada o existente después de establecer la conexión
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -52,4 +69,37 @@ func createDatabaseIfNotExists(db *gorm.DB, dbName string) error {
 
 	// Selecciona la base de datos recién creada o existente
 	return db.Exec("USE " + dbName).Error
+}
+*/
+package db
+
+import (
+	//"os"
+
+	prodCliente "github.com/aaraya0/ingsw3-final/backend/client"
+	"github.com/aaraya0/ingsw3-final/backend/model"
+	log "github.com/sirupsen/logrus"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+var (
+	db  *gorm.DB
+	err error
+)
+
+func init() {
+	dsn := "root:aaraya0@tcp(127.0.0.1:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Info("Connection fail")
+		log.Fatal(err)
+	} else {
+		log.Info("Connection success")
+	}
+	prodCliente.Db = db
+}
+func StartDbEngine() {
+	db.AutoMigrate(&model.Product{})
+	log.Info("Finishing migration database tables")
 }
