@@ -46,12 +46,12 @@ jobs:
 
     - name: Build and Push Docker Images
       run: |
-        docker build -t aaraya0/ingsw3-final-front:latest -f ./frontend/Dockerfile .
+        docker build -t aaraya0/ingsw3-final-front:latest -f frontend/Dockerfile .
         docker push aaraya0/ingsw3-final-front:latest
   
-        docker build -t aaraya0/ingsw3-final-back:latest -f ./backend/Dockerfile .
+        docker build -t aaraya0/ingsw3-final-back:latest -f backend/Dockerfile .
         docker push aaraya0/ingsw3-final-back:latest
 
-        docker build -t aaraya0/ingsw3-final-database:latest -f ./db/Dockerfile .
+        docker build -t aaraya0/ingsw3-final-database:latest -f db/Dockerfile .
         docker push aaraya0/ingsw3-final-database:latest
 
