@@ -44,7 +44,14 @@ jobs:
     - name: Login to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: Build and Push Docker Image
+    - name: Build and Push Docker Images
       run: |
-        docker build -t aaraya0/ingsw3-final:latest .
-        docker push aaraya0/ingsw3-final:latest
+        docker build -t aaraya0/ingsw3-final-front:latest -f ./frontend/Dockerfile .
+        docker push aaraya0/ingsw3-final-front:latest
+  
+        docker build -t aaraya0/ingsw3-final-back:latest -f ./backend/Dockerfile .
+        docker push aaraya0/ingsw3-final-back:latest
+
+        docker build -t aaraya0/ingsw3-final-database:latest -f ./db/Dockerfile .
+        docker push aaraya0/ingsw3-final-database:latest
+
