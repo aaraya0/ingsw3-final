@@ -42,21 +42,12 @@ jobs:
 
     - name: Login to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-    - name: Build and Push Backend Docker Image
+    - name: Tag and push Docker images
       run: |
-        docker build -t aaraya0/ingsw3-final-back:latest -f backend/Dockerfile .
-        docker push aaraya0/ingsw3-final-back:latest
+        docker tag ingsw3-final-back:latest ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
+        docker tag ingsw3-final-front:latest ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
+        docker tag ingsw3-final-database ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database
 
-    - name: Build and Push Frontend Docker Image
-      run: |
-        docker build -t aaraya0/ingsw3-final-front:latest -f frontend/Dockerfile .
-        docker push aaraya0/ingsw3-final-front:latest
-
-    - name: Build and Push Database Docker Image
-      run: |
-        docker build -t aaraya0/ingsw3-final-database:latest -f db/Dockerfile .
-        docker push aaraya0/ingsw3-final-database:latest
-#    - name: Build and Push Docker Images
-#      run: docker-compose build && docker-compose push
-
+        docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-backend:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-frontend:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-database
