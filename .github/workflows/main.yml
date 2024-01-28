@@ -47,7 +47,7 @@ jobs:
       
       - name: Tag and push Docker images
         run: |
-          docker tag ingsw3-final-back:latest ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
+          docker tag ingsw3-final-back ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back
           docker tag ingsw3-final-front:latest ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
           docker tag ingsw3-final-database ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database
           docker push ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
