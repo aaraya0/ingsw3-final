@@ -89,7 +89,9 @@ var (
 )
 
 func init() {
-	dsn := "root:aaraya0@tcp(127.0.0.1:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
+	// ingsw3-final-database-1
+	dsn := "root:aaraya0@tcp(ingsw3-final-database-1:3307)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
+	//dsn := "root:aaraya0@tcp(backend:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Info("Connection fail")
