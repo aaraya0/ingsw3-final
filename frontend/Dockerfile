@@ -1,14 +1,14 @@
 FROM node:16
 
-ADD . /app
+COPY . /app
 WORKDIR /app
 COPY ./package.json .
 COPY ./package-lock.json .
 
 RUN npm install
 
-COPY . .
-#COPY ./ ./
+#COPY . .
+COPY ./ ./
 
 RUN npm run build 
 
