@@ -12,7 +12,9 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
-
+    - name: Build and run 
+      run: |
+         docker compose up -d
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -37,17 +39,17 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Login to Docker Hub
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-    - name: Tag and push Docker images
-      run: |
-        docker tag ingsw3-final-back:latest ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
-        docker tag ingsw3-final-front:latest ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
-        docker tag ingsw3-final-database ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database
-
-        docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-backend:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-frontend:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-database
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+  
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Tag and push Docker images
+        run: |
+          docker tag ingsw3-final-back:latest ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
+          docker tag ingsw3-final-front:latest ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
+          docker tag ingsw3-final-database ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database
+          docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-frontend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/integradoringsw3-database
