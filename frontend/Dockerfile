@@ -1,23 +1,19 @@
-# Usa la imagen oficial de Node.js como base
-FROM node:latest
+FROM node:16
 
-# Establece el directorio de trabajo dentro del contenedor
+ADD . /app
 WORKDIR /app
+COPY package.json .
+COPY package-lock.json .
 
-# Copia los archivos necesarios para instalar las dependencias
-COPY package.json package-lock.json ./
-
-# Instala las dependencias
 RUN npm install
 
-# Copia el resto de los archivos de la aplicación
 COPY . .
+#COPY ./ ./
 
-# Construye la aplicación
-RUN npm run build
+RUN npm run build 
 
-# Expone el puerto en el que la aplicación se ejecutará
 EXPOSE 3000
 
-# Comando para iniciar la aplicación
 CMD ["npm", "start"]
+
+#CMD ["npm", "run", "start"]
