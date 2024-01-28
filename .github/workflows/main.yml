@@ -13,29 +13,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Setup Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: '1.18'  # Reemplaza con la versión de Go que estás utilizando
-
-    - name: Install Dependencies and Build Go Backend
-      run: |
-        go mod download
-        go build -o backend ./backend/main.go
-
-    - name: Build and Test React Frontend
-      working-directory: frontend
-      run: |
-        npm install
-        npm test -- --passWithNoTests
-        npm run build
-
-    - name: Upload Frontend Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: frontend
-        path: frontend/build
-
   test:
     needs: build
     runs-on: ubuntu-latest
@@ -47,7 +24,7 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v2
       with:
-        go-version: '1.18'  
+        go-version: '1.18'
 
     - name: Install Dependencies
       run: go mod download
@@ -64,19 +41,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final:latest
-
-    - name: Log in to Docker Hub
-      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      
-    - name: Push Docker image to Docker Hub
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/ingsw3-final:latest
-      
-    - name: Clean up
-      run: docker logout
-      if: always() # Se ejecutará incluso si un paso anterior falla
+    - name: Build and Push Docker image
+      run: docker-compose -f docker-compose.yml build && docker-compose -f docker-compose.yml push
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   deploy:
     needs: build-and-publish-docker
