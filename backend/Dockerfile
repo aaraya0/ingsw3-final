@@ -6,7 +6,7 @@ ADD . /backend
 WORKDIR /backend
 
 # Instalar dependencias de Go
-# RUN go mod init github.com/aaraya0/ingsw3-final/backend
+RUN go mod init github.com/aaraya0/ingsw3-final/backend
 RUN go mod tidy
 RUN go mod download
 
