@@ -47,11 +47,16 @@ jobs:
       
       - name: Tag and push Docker images
         run: |
-          docker tag backend ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
-          docker tag frontend ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
-          docker tag database ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest ./backend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest ./frontend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest ./db
+          
           docker push ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database
+          docker push ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
 
        
