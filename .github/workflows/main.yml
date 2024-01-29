@@ -58,5 +58,23 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-
+      - name: Configure Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '349.0.0'
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      
+      - name: Configure Docker
+        uses: actions/setup-docker@v2
+      
+      - name: Build and push Docker images to Google Container Registry
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest ./backend
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest ./frontend
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest ./db
+          
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
        
