@@ -80,11 +80,13 @@ jobs:
           IMAGES=("ingsw3-final-back" "ingsw3-final-front" "ingsw3-final-database")
           for IMAGE_NAME in "${IMAGES[@]}"; do
             GCR_IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${IMAGE_NAME}
+            cd $IMAGE_NAME  # Change directory to the one containing the Dockerfile
             docker buildx create --use
-            docker buildx build --platform linux/amd64,linux/arm64 -t $GCR_IMAGE_NAME -f $IMAGE_NAME/Dockerfile .
+            docker buildx build --platform linux/amd64,linux/arm64 -t $GCR_IMAGE_NAME -f Dockerfile .
             docker push $GCR_IMAGE_NAME
+            cd ..  # Return to the root directory
           done
-          
+
       - name: Set Docker image tags
         run: |
           IMAGES=("ingsw3-final-back" "ingsw3-final-front" "ingsw3-final-database")
