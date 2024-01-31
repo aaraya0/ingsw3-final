@@ -58,6 +58,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   publish_to_gcr:
+      needs: docker-publish
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
