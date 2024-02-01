@@ -79,6 +79,10 @@ jobs:
 
       - name: Tag and push Docker images to GCR
         run: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest
+          
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
