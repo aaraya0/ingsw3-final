@@ -74,31 +74,13 @@ jobs:
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > /tmp/keyfile.json
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
-      
-      - name: Build and push Docker images to GCR
-        run: |
-          IMAGES=("ingsw3-final-back" "ingsw3-final-front" "ingsw3-final-database")
-          for IMAGE_NAME in "${IMAGES[@]}"; do
-            GCR_IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${IMAGE_NAME}
-            cd $IMAGE_NAME  # Change directory to the one containing the Dockerfile
-            docker buildx create --use
-            docker buildx build --platform linux/amd64,linux/arm64 -t $GCR_IMAGE_NAME -f Dockerfile .
-            docker push $GCR_IMAGE_NAME
-            cd ..  # Return to the root directory
-          done
 
-      - name: Set Docker image tags
+      - name: Tag and push Docker images to GCR
         run: |
-          IMAGES=("ingsw3-final-back" "ingsw3-final-front" "ingsw3-final-database")
-          for IMAGE_NAME in "${IMAGES[@]}"; do
-            GCR_IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${IMAGE_NAME}
-            docker tag $GCR_IMAGE_NAME $GCR_IMAGE_NAME:latest
-          done
-  
-      - name: Push Docker images to GCR
-        run: |
-          IMAGES=("ingsw3-final-back" "ingsw3-final-front" "ingsw3-final-database")
-          for IMAGE_NAME in "${IMAGES[@]}"; do
-            GCR_IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${IMAGE_NAME}
-            docker push $GCR_IMAGE_NAME:latest
-          done
+          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
+          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
+          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
+          
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
