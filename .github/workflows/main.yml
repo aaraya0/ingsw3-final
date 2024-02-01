@@ -107,6 +107,15 @@ jobs:
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Deploy Database to Cloud Run
+        run: |
+          gcloud run deploy my-app-database \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
+            --region=us-central1 \
+            --platform=managed \
+            --allow-unauthenticated
+            --project=${{ secrets.GCP_PROJECT_ID }}
+
       - name: Deploy Backend to Cloud Run
         run: |
           gcloud run deploy my-app-backend \
@@ -115,6 +124,7 @@ jobs:
             --platform=managed \
             --allow-unauthenticated
             --project=${{ secrets.GCP_PROJECT_ID }}
+            
       - name: Deploy Frontend to Cloud Run
         run: |
           gcloud run deploy my-app-frontend \
@@ -124,11 +134,3 @@ jobs:
             --allow-unauthenticated
             --project=${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Deploy Database to Cloud Run
-        run: |
-          gcloud run deploy my-app-database \
-            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
-            --region=us-central1 \
-            --platform=managed \
-            --allow-unauthenticated
-            --project=${{ secrets.GCP_PROJECT_ID }}
