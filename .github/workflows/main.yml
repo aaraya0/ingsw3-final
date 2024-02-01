@@ -101,12 +101,11 @@ jobs:
       - name: Deploy Backend to Cloud Run
         run: |
           gcloud run deploy my-app-backend \
-            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
+            --image=gcr.io/proyecto-final-ing/ingsw3-final-back:latest \
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated
-            --project=${{ secrets.GCP_PROJECT_ID }}
-
+            --project=proyecto-final-ing
       - name: Deploy Frontend to Cloud Run
         run: |
           gcloud run deploy my-app-frontend \
