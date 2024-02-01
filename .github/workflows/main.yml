@@ -75,11 +75,11 @@ jobs:
           echo '${{ secrets.GCP_SA_KEY }}' > /tmp/keyfile.json
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
 
-      - name: Tag and push Docker images to GCR
+      - name: Build and push Docker images to GCR
         run: |
-          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
-          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
-          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest ./backend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest ./frontend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest ./db
           
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
