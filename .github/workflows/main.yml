@@ -116,6 +116,7 @@ jobs:
             --allow-unauthenticated
             --project=${{ secrets.GCP_PROJECT_ID }}
             --memory=4GiB
+            --cpu=2
 
       - name: Deploy Backend to Cloud Run
         run: |
@@ -126,6 +127,7 @@ jobs:
             --allow-unauthenticated
             --project=${{ secrets.GCP_PROJECT_ID }}
             --memory=4GiB
+            --cpu=2
             
       - name: Deploy Frontend to Cloud Run
         run: |
@@ -136,4 +138,5 @@ jobs:
             --allow-unauthenticated
             --project=${{ secrets.GCP_PROJECT_ID }}
             --memory=4GiB
+            --cpu=2
 
