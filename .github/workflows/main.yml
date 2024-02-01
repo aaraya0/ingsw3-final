@@ -68,12 +68,15 @@ jobs:
         uses: docker/setup-buildx-action@v1
   
       - name: Log in to Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-  
+        run: |
+         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+         docker info
+         
       - name: Log in to GCR
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > /tmp/keyfile.json
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
+          gcloud auth list
 
       - name: Build and push Docker images to GCR
         run: |
