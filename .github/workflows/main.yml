@@ -57,37 +57,32 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  
   publish_to_gcr:
-      needs: docker-publish
-      runs-on: ubuntu-latest
-      steps:
+    needs: docker-publish
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout code
         uses: actions/checkout@v2
-  
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-  
+
       - name: Log in to Docker Hub
-        run: |
-         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-         docker info
-         
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Log in to GCR
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > /tmp/keyfile.json
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
-          gcloud auth list
+          gcloud auth configure-docker gcr.io
 
-      - name: Build and push Docker images to GCR
+      - name: Tag and push Docker images to GCR
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest ./backend
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest ./frontend
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest ./db
-          
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
-          
+
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
