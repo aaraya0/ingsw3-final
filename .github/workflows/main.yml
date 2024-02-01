@@ -97,15 +97,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+     
+      - name: Set Google Cloud project
+        run: gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Deploy Backend to Cloud Run
         run: |
           gcloud run deploy my-app-backend \
-            --image=gcr.io/proyecto-final-ing/ingsw3-final-back:latest \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated
-            --project=proyecto-final-ing
+            --project=${{ secrets.GCP_PROJECT_ID }}
       - name: Deploy Frontend to Cloud Run
         run: |
           gcloud run deploy my-app-frontend \
