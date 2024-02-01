@@ -81,6 +81,10 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest ./frontend
           docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest ./db
           
+          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
+          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
+          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
+          
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
