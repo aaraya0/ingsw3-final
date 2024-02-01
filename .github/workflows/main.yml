@@ -90,3 +90,34 @@ jobs:
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
+
+  deploy_to_cloud_run:
+    needs: publish_to_gcr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy Backend to Cloud Run
+        run: |
+          gcloud run deploy my-app-backend \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
+            --region=us-central1 \
+            --platform=managed \
+            --allow-unauthenticated
+
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          gcloud run deploy my-app-frontend \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
+            --region=us-central1 \
+            --platform=managed \
+            --allow-unauthenticated
+
+      - name: Deploy Database to Cloud Run
+        run: |
+          gcloud run deploy my-app-database \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
+            --region=us-central1 \
+            --platform=managed \
+            --allow-unauthenticated
