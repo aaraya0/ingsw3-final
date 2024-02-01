@@ -1,6 +1,6 @@
 # Dockerfile para MySQL
 FROM mysql
-
+ENV HOST 0.0.0.0
 # Variables de entorno para configurar la base de datos
 ENV MYSQL_ROOT_PASSWORD=aaraya0
 ENV MYSQL_DATABASE=fastfood
