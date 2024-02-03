@@ -111,21 +111,21 @@ jobs:
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
             --platform=managed \
             --allow-unauthenticated \
-            --memory=4GiB \
+            --memory=4G \
             --cpu=2 \
             --port=3306
           gcloud run deploy my-app-backend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
             --platform=managed \
             --allow-unauthenticated \
-            --memory=4GiB \
+            --memory=4G \
             --cpu=2 \
             --port=8090
           gcloud run deploy my-app-frontend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
             --platform=managed \
             --allow-unauthenticated \
-            --memory=4GiB \
+            --memory=4G \
             --cpu=2 \
             --port=3000
   
