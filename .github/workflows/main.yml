@@ -111,13 +111,13 @@ jobs:
         run: |
           gcloud run deploy my-app-database \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
-            --port=3306
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated
             --project=${{ secrets.GCP_PROJECT_ID }}
             --memory=4GiB
             --cpu=2
+            --port=3306
 
 
       - name: Deploy Backend to Cloud Run
