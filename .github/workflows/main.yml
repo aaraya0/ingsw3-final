@@ -97,51 +97,35 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-     
-      - name: Set Google Cloud project
-        run: gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-      
-      - name: Authenticate with Google Cloud
+  
+      - name: Set Google Cloud project and authenticate
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > /tmp/keyfile.json
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Deploy Database to Cloud Run
+          gcloud config set run/region us-central1
+  
+      - name: Deploy all services to Cloud Run
         run: |
           gcloud run deploy my-app-database \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
-            --region=us-central1 \
             --platform=managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --memory=4GiB \
+            --cpu=2 \
             --port=3306
-            --project=${{ secrets.GCP_PROJECT_ID }}
-            --memory=4GiB
-            --cpu=2
-
-
-
-      - name: Deploy Backend to Cloud Run
-        run: |
           gcloud run deploy my-app-backend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
-            --region=us-central1 \
             --platform=managed \
-            --allow-unauthenticated
-            --project=${{ secrets.GCP_PROJECT_ID }}
-            --memory=4GiB
-            --cpu=2
+            --allow-unauthenticated \
+            --memory=4GiB \
+            --cpu=2 \
             --port=8090
-            
-      - name: Deploy Frontend to Cloud Run
-        run: |
           gcloud run deploy my-app-frontend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
-            --region=us-central1 \
             --platform=managed \
-            --allow-unauthenticated
-            --project=${{ secrets.GCP_PROJECT_ID }}
-            --memory=4GiB
-            --cpu=2
+            --allow-unauthenticated \
+            --memory=4GiB \
+            --cpu=2 \
             --port=3000
-
+  
