@@ -117,6 +117,15 @@ jobs:
             --memory=4G \
             --cpu=2 \
             --port=3306
+            
+          gcloud run deploy my-app-frontend \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
+            --platform=managed \
+            --allow-unauthenticated \
+            --memory=4G \
+            --cpu=2 \
+            --port=3000
+
           gcloud run deploy my-app-backend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
             --platform=managed \
@@ -125,11 +134,4 @@ jobs:
             --cpu=2 \
             --port=8080
             --set-env-vars=DB_HOST=$DB_HOST
-          gcloud run deploy my-app-frontend \
-            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
-            --platform=managed \
-            --allow-unauthenticated \
-            --memory=4G \
-            --cpu=2 \
-            --port=3000
-  
+
