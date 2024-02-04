@@ -25,5 +25,7 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    environment:
+      HOST: 0.0.0.0
     ports:
       - "8080:8080"
