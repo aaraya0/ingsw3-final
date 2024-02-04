@@ -134,6 +134,6 @@ jobs:
             --allow-unauthenticated \
             --memory=4G \
             --cpu=2 \
-            --port=8080 \
-            --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app"
+            --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app" \
+            --probe-startup-timeout=200s 
 
