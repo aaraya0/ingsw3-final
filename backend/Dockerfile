@@ -13,7 +13,6 @@ RUN go mod download
 RUN go build -o main .
 
 # Exponer el puerto en el que la aplicación escucha
-ENV HOST=0.0.0.0
 EXPOSE 8090
 
 

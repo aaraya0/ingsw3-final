@@ -18,6 +18,9 @@ import (
 
 
 
+
+
+
 	prodCliente "github.com/aaraya0/ingsw3-final/backend/client"
 	"github.com/aaraya0/ingsw3-final/backend/model"
 	log "github.com/sirupsen/logrus"
@@ -81,6 +84,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os"
 )
 
 var (
@@ -90,7 +94,9 @@ var (
 
 func init() {
 	// ingsw3-final-database-1
-	dsn := "root:aaraya0@tcp(my-app-database:3307)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
+	//db, err := sql.Open("mysql", "user:password@tcp("+os.Getenv("DB_HOST")+")/dbname")
+	//dsn := "root:aaraya0@tcp(my-app-database:3307)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:aaraya0@tcp(" + os.Getenv("DB_HOST") + ":3307)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	//dsn := "root:aaraya0@tcp(backend:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
