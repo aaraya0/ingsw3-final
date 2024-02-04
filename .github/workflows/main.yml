@@ -104,22 +104,22 @@ jobs:
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
           gcloud config set run/region us-central1
-
-      - name: Set environment variable for database host
-        run: echo "DB_HOST=my-app-database.run.app:3306" >> $GITHUB_ENV
-      - name: Debug DB_HOST
-        run: echo "DB_HOST=$DB_HOST"
  
       - name: Deploy all services to Cloud Run
         run: |
-          gcloud run deploy my-app-database \
+          # Despliega el servicio de base de datos y obtén la URL
+          DATABASE_URL=$(gcloud run deploy my-app-database \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
             --platform=managed \
             --allow-unauthenticated \
             --memory=4G \
             --cpu=2 \
-            --port=3306
-            
+            --port=3306 \
+            --format="value(status.url)")
+
+          # Almacena la URL como una variable de entorno
+          echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
+          
           gcloud run deploy my-app-frontend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
             --platform=managed \
@@ -135,5 +135,5 @@ jobs:
             --memory=4G \
             --cpu=2 \
             --port=8080 \
-            --set-env-vars=DB_HOST=$DB_HOST
+            --set-env-vars=DB_HOST=$DATABASE_URL
 
