@@ -4,6 +4,8 @@ FROM golang:latest
 ADD . /backend
 
 WORKDIR /backend
+
+ENV HOST=0.0.0.0
 # Instalar dependencias de Go
 RUN go mod init github.com/aaraya0/ingsw3-final/backend
 RUN go mod tidy
