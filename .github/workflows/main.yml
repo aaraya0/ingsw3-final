@@ -123,7 +123,7 @@ jobs:
             --allow-unauthenticated \
             --memory=4G \
             --cpu=2 \
-            --port=8090
+            --port=8080
           gcloud run deploy my-app-frontend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
             --platform=managed \
