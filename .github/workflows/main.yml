@@ -107,7 +107,10 @@ jobs:
 
       - name: Set environment variable for database host
         run: echo "export DB_HOST=my-app-database.run.app:3306" >> $GITHUB_ENV
-        
+
+      - name: Debug DB_HOST
+        run: echo "DB_HOST=$DB_HOST"
+ 
       - name: Deploy all services to Cloud Run
         run: |
           gcloud run deploy my-app-database \
