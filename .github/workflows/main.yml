@@ -104,7 +104,10 @@ jobs:
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
           gcloud config set run/region us-central1
-  
+
+      - name: Set environment variable for database host
+        run: echo "export DB_HOST=my-app-database.run.app:3306" >> $GITHUB_ENV
+        
       - name: Deploy all services to Cloud Run
         run: |
           gcloud run deploy my-app-database \
