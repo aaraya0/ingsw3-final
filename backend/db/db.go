@@ -95,8 +95,8 @@ func init() {
 	// ingsw3-final-database-1
 	//db, err := sql.Open("mysql", "user:password@tcp("+os.Getenv("DB_HOST")+")/dbname")
 	//dsn := "root:aaraya0@tcp(my-app-database:3307)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
-	//DB_HOST := "my-app-database.run.app"
-	DB_HOST := "my-app-database-xho37fneiq-uc.a.run.app/"
+	DB_HOST := "my-app-database.run.app"
+	//DB_HOST := "my-app-database-xho37fneiq-uc.a.run.app/"
 	dsn := "root:aaraya0@tcp(" + DB_HOST + ":3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	//dsn := "root:aaraya0@tcp(backend:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
