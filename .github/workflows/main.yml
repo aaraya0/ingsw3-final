@@ -135,5 +135,5 @@ jobs:
             --memory=4G \
             --cpu=2 \
             --port=8080 \
-            --set-env-vars=DB_HOST=$DATABASE_URL
+            --set-env-vars=DB_HOST=gcr.io
 
