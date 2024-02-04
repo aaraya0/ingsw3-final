@@ -106,8 +106,7 @@ jobs:
           gcloud config set run/region us-central1
 
       - name: Set environment variable for database host
-        run: echo "export DB_HOST=my-app-database.run.app:3306" >> $GITHUB_ENV
-
+        run: echo "DB_HOST=my-app-database.run.app:3306" >> $GITHUB_ENV
       - name: Debug DB_HOST
         run: echo "DB_HOST=$DB_HOST"
  
