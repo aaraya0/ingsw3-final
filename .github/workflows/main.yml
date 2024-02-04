@@ -132,6 +132,6 @@ jobs:
             --allow-unauthenticated \
             --memory=4G \
             --cpu=2 \
-            --port=8080
+            --port=8080 \
             --set-env-vars=DB_HOST=$DB_HOST
 
