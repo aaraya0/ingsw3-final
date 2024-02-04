@@ -135,5 +135,5 @@ jobs:
             --memory=4G \
             --cpu=2 \
             --port=8080 \
-            --set-env-vars=DB_HOST=gcr.io
+            --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app"
 
