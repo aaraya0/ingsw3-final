@@ -98,9 +98,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
   
-      - name: Install gke-gcloud-auth-plugin
-        run: |
-          gcloud components install kubectl
+      - name: Install kubectl
+        run: sudo apt-get install kubectl
   
       - name: Set Google Cloud project and authenticate
         run: |
