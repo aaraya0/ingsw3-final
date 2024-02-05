@@ -95,14 +95,29 @@ jobs:
     needs: publish_to_gcr
     runs-on: ubuntu-latest
     steps:
-      - name: Configure kubectl
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          version: '290.0.1'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0.5.1
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Create GKE Cluster
+      run: |
+        gcloud container clusters create my-gke-cluster --num-nodes=1 --zone=us-central1-a
+        gcloud container clusters get-credentials my-gke-cluster --zone=us-central1-a
   
-      - name: Deploy to GKE
-        run: |
-          kubectl apply -f k8s/deployment.yaml
+    - name: Configure kubectl
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: Deploy to GKE
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+
