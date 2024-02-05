@@ -116,13 +116,10 @@ jobs:
             gcloud container clusters create my-gke-cluster --num-nodes=1 --zone=us-central1-a
             gcloud container clusters get-credentials my-gke-cluster --zone=us-central1-a
           fi
-    
+          
       - name: Configure kubectl
-        run: |
-          kubectl config set-cluster gke_${{ secrets.GCP_PROJECT_ID }}_us-central1-a_my-gke-cluster --server=https://35.223.180.188
-          kubectl config set-context gke_${{ secrets.GCP_PROJECT_ID }}_us-central1-a_my-gke-cluster --cluster=gke_${{ secrets.GCP_PROJECT_ID }}_us-central1-a_my-gke-cluster
-          kubectl config use-context gke_${{ secrets.GCP_PROJECT_ID }}_us-central1-a_my-gke-cluster
-  
+        run: gcloud container clusters get-credentials my-gke-cluster --zone=us-central1-a
+      
       - name: Deploy to GKE
         run: |
           kubectl apply -f k8s/deployment.yaml --validate=false
