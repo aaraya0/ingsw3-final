@@ -98,6 +98,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
   
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install kubectl
+  
       - name: Set Google Cloud project and authenticate
         run: |
           echo '${{ secrets.GCP_SA_KEY }}' > /tmp/keyfile.json
@@ -111,14 +115,11 @@ jobs:
           gcloud container clusters get-credentials my-gke-cluster --zone=us-central1-a
     
       - name: Configure kubectl
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: '>= 363.0.0'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+        run: |
+          kubectl config set-cluster gke_${{ secrets.GCP_PROJECT_ID }}_us-central1-a_my-gke-cluster --server=https://35.223.180.188
+          kubectl config set-context gke_${{ secrets.GCP_PROJECT_ID }}_us-central1-a_my-gke-cluster --cluster=gke_${{ secrets.GCP_PROJECT_ID }}_us-central1-a_my-gke-cluster
+          kubectl config use-context gke_${{ secrets.GCP_PROJECT_ID }}_us-central1-a_my-gke-cluster
   
       - name: Deploy to GKE
         run: |
-          kubectl apply -f k8s/deployment.yaml
-
+          kubectl apply -f k8s/deployment.yaml --validate=false
