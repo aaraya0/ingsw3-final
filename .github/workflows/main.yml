@@ -6,22 +6,6 @@ on:
       - main
 
 jobs:
-  create-cloud-sql:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-       
-      - name: Create Cloud SQL Instance
-        uses: google-github-actions/setup-gcloud@v0.3.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-
-      - name: Create Cloud SQL Instance
-        run: |
-          gcloud sql instances describe final-sql || gcloud sql instances create final-sql --database-version=MYSQL_5_7 --tier=db-f1-micro --region=us-central1
   
   build:
     runs-on: ubuntu-latest
@@ -105,7 +89,7 @@ jobs:
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
 
   execute-sql-script:
-    needs: publish_to_gcr
+    needs: docker-publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -126,8 +110,8 @@ jobs:
     
       - name: Execute SQL Script
         run: |
-          gcloud sql databases create fastfood --instance=final-sql
-          gcloud sql import sql final-sql ./fastfood.sql  
+          gcloud sql databases create fastfood --instance=db-ing
+          gcloud sql import sql db-ing ./fastfood.sql  
 
   deploy_to_cloud_run:
     needs: publish_to_gcr
@@ -146,7 +130,7 @@ jobs:
       - name: Get Cloud SQL IP Address
         id: get-sql-ip
         run: |
-          SQL_IP=$(gcloud sql instances describe my-cloud-sql-instance --format='value(ipAddresses[0].ipAddress)')
+          SQL_IP=$(gcloud sql instances describe db-ing --format='value(ipAddresses[0].ipAddress)')
           echo "SQL_IP=$SQL_IP" >> $GITHUB_ENV
 
       - name: Deploy all services to Cloud Run
