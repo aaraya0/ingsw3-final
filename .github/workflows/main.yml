@@ -110,8 +110,21 @@ jobs:
     
       - name: Execute SQL Script
         run: |
-          gcloud sql databases create fastfood --instance=db-ing
-          echo "y" | gcloud sql import sql db-ing ./fastfood.sql
+          INSTANCE_NAME=db-ing
+          DATABASE_NAME=fastfood
+
+          # Verificar si la base de datos ya existe
+          if gcloud sql databases list --instance=$INSTANCE_NAME | grep -q $DATABASE_NAME; then
+            echo "La base de datos $DATABASE_NAME ya existe."
+          else
+            # Crear la base de datos solo si no existe
+            gcloud sql databases create $DATABASE_NAME --instance=$INSTANCE_NAME
+            echo "Base de datos $DATABASE_NAME creada."
+          fi
+
+          # Importar datos a la base de datos
+          echo "y" | gcloud sql import sql $INSTANCE_NAME ./fastfood.sql
+
 
 
   deploy_to_cloud_run:
