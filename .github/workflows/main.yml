@@ -6,34 +6,34 @@ on:
       - main
 
 jobs:
-  
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      - name: Build and run 
-        run: |
-          docker compose up -d
-          
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+    - name: Build and run 
+      run: |
+         docker compose up -d
   test:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
-      - name: Setup Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: '1.18'
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.18'
 
-      - name: Install Dependencies
-        run: go mod download
+    - name: Install Dependencies
+      run: go mod download
 
-      - name: Run Unit Tests
-        working-directory: backend
-        run: go test ./...
+    - name: Run Unit Tests
+      working-directory: backend
+      run: go test ./...
 
   docker-publish:
     needs: test
@@ -41,10 +41,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-    
+  
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        
+      
       - name: Tag and push Docker images
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest ./backend
@@ -57,7 +57,7 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    
+  
   publish_to_gcr:
     needs: docker-publish
     runs-on: ubuntu-latest
@@ -81,18 +81,18 @@ jobs:
         run: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
           docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
-      
-
+          docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest
+          
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
-         
+          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
+
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
 
-          
   deploy_to_cloud_run:
     needs: publish_to_gcr
-    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -104,23 +104,17 @@ jobs:
           gcloud auth activate-service-account --key-file=/tmp/keyfile.json
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
           gcloud config set run/region us-central1
-
-      - name: Get Cloud SQL IP Address
-        id: get-sql-ip
+ 
+      - name: Deploy services to Cloud Run
         run: |
-          SQL_IP=$(gcloud sql instances describe db-ing --format='value(ipAddresses[0].ipAddress)')
-          echo "SQL_IP=$SQL_IP" >> $GITHUB_ENV
-
-      - name: Deploy all services to Cloud Run
-        run: |     
-          gcloud run deploy my-app-backend \
-            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
+          gcloud run deploy my-app-database \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
             --platform=managed \
             --allow-unauthenticated \
             --memory=4G \
             --cpu=2 \
-            --port=8080 \
-            --set-env-vars=DB_HOST=${{ env.SQL_IP }}
+            --port=3306
+            
           gcloud run deploy my-app-frontend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
             --platform=managed \
@@ -128,3 +122,17 @@ jobs:
             --memory=4G \
             --cpu=2 \
             --port=3000
+
+      - name: Deploy backend service to Cloud Run
+        run: |
+          gcloud run deploy my-app-backend \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
+            --platform=managed \
+            --allow-unauthenticated \
+            --memory=4G \
+            --cpu=2 \
+            --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app" \
+            --port=8080
+        env:
+          SLEEP_TIME: 600
+        timeout-minutes: ${{ env.SLEEP_TIME }}
