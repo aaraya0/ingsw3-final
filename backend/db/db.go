@@ -21,6 +21,7 @@ import (
 
 
 
+
 	prodCliente "github.com/aaraya0/ingsw3-final/backend/client"
 	"github.com/aaraya0/ingsw3-final/backend/model"
 	log "github.com/sirupsen/logrus"
@@ -77,13 +78,12 @@ func createDatabaseIfNotExists(db *gorm.DB, dbName string) error {
 package db
 
 import (
-	"os"
-
 	prodCliente "github.com/aaraya0/ingsw3-final/backend/client"
 	"github.com/aaraya0/ingsw3-final/backend/model"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os"
 )
 
 var (
@@ -97,7 +97,7 @@ func init() {
 	//dsn := "root:aaraya0@tcp(my-app-database:3307)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	//DB_HOST := "my-app-database.run.app"
 	dsn := "root:aaraya0@tcp(" + os.Getenv("DB_HOST") + ":3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
-
+	//dsn := "root:aaraya0@tcp(my-app-database-xho37fneiq-uc.a.run.app:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	//DB_HOST := "my-app-database-xho37fneiq-uc.a.run.app/"
 	// dsn := "root:aaraya0@tcp(" + DB_HOST + ":3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	//dsn := "root:aaraya0@tcp(backend:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
