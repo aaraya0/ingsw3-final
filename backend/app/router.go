@@ -1,8 +1,10 @@
 package app
 
 import (
+	"log"
+	"os"
+
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -16,7 +18,12 @@ func init() {
 func StartRoute() {
 	mapUrls()
 
-	log.Info("Starting server")
-	router.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Usa un puerto predeterminado si no se especifica PORT
+	}
 
+	address := "0.0.0.0:" + port
+	log.Printf("Starting server on %s\n", address)
+	router.Run(address)
 }
