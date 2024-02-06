@@ -5,7 +5,6 @@ ADD . /backend
 
 WORKDIR /backend
 
-ENV HOST=0.0.0.0
 # Instalar dependencias de Go
 RUN go mod init github.com/aaraya0/ingsw3-final/backend
 RUN go mod tidy
@@ -15,7 +14,7 @@ RUN go mod download
 RUN go build -o main .
 
 # Exponer el puerto en el que la aplicación escucha
-EXPOSE 8080
+EXPOSE 80
 
 
 # Comando para ejecutar la aplicación

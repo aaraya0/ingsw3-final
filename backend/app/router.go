@@ -20,10 +20,10 @@ func StartRoute() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // Usa un puerto predeterminado si no se especifica PORT
+		port = "80" // Usa un puerto predeterminado si no se especifica PORT
 	}
 
-	address := "0.0.0.0:" + port
+	address := "0.0.0.0:80"
 	log.Printf("Starting server on %s\n", address)
 	router.Run(address)
 }
