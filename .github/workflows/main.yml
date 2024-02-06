@@ -105,7 +105,7 @@ jobs:
       - name: Get SQL Script from Docker Image
         run: |
           docker create --name temp-container ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest
-          docker cp temp-container:./fastfood.sql ./fastfood.sql
+          docker cp temp-container:/fastfood.sql ./fastfood.sql
           docker rm temp-container
     
       - name: Execute SQL Script
