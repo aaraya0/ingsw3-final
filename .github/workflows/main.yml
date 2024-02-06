@@ -132,7 +132,5 @@ jobs:
             --memory=4G \
             --cpu=2 \
             --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app" \
-            --port=8080
-        env:
-          SLEEP_TIME: 600
-        timeout-minutes: ${{ env.SLEEP_TIME }}
+            --port=8080 \
+            --timeout= 3m
