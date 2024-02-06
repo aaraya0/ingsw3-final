@@ -111,10 +111,14 @@ jobs:
       - name: Execute SQL Script
         run: |
           gcloud sql databases create fastfood --instance=db-ing
-          gcloud sql import sql db-ing ./fastfood.sql  
+          echo "y" | gcloud sql import sql db-ing ./fastfood.sql
+
 
   deploy_to_cloud_run:
-    needs: publish_to_gcr
+    needs: 
+    - publish_to_gcr
+    - execute-sql-script
+    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
