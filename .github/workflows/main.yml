@@ -121,9 +121,8 @@ jobs:
             gcloud sql databases create $DATABASE_NAME --instance=$INSTANCE_NAME
             echo "Base de datos $DATABASE_NAME creada."
           fi
-
           # Importar datos a la base de datos
-          echo "y" | gcloud sql import sql $INSTANCE_NAME ./fastfood.sql
+          gcloud sql import sql db-ing ./fastfood.sql --quiet
 
 
 
