@@ -129,7 +129,8 @@ jobs:
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
             --platform=managed \
             --allow-unauthenticated \
-            --memory=4G \
-            --cpu=2 \
+            --memory=6G \
+            --cpu=3 \
+            --max-instances=15 \
             --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app" \
-            --timeout=1800s
+            --timeout=500s
