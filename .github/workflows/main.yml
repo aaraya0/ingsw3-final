@@ -6,7 +6,24 @@ on:
       - main
 
 jobs:
-  build:
+  create-cloud-sql:
+	    runs-on: ubuntu-latest
+	    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+       
+      - name: Create Cloud SQL Instance
+        uses: google-github-actions/setup-gcloud@v0.3.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Create Cloud SQL Instance
+        run: |
+          gcloud sql instances describe final-sql || gcloud sql instances create final-sql --database-version=MYSQL_5_7 --tier=db-f1-micro --region=us-central1
+  
+build:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,7 +32,7 @@ jobs:
     - name: Build and run 
       run: |
          docker compose up -d
-  test:
+test:
     needs: build
     runs-on: ubuntu-latest
 
@@ -35,7 +52,7 @@ jobs:
       working-directory: backend
       run: go test ./...
 
-  docker-publish:
+docker-publish:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -58,7 +75,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   
-  publish_to_gcr:
+publish_to_gcr:
     needs: docker-publish
     runs-on: ubuntu-latest
     steps:
@@ -81,26 +98,44 @@ jobs:
         run: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
           docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
-          docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest
           
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
-          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
-
+   
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
 
-  deploy_to_gke:
+execute-sql-script:
     needs: publish_to_gcr
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-  
-      - name: Install kubectl
+        
+      - name: Set up Google Cloud CLI
+	      uses: google-github-actions/setup-gcloud@v0.3.0
+	      with:
+	        project_id: ${{ secrets.GCP_PROJECT_ID }}
+	        service_account_key: ${{ secrets.GCP_SA_KEY }}
+	        export_default_credentials: true
+	
+      - name: Get SQL Script from Docker Image
         run: |
-          sudo apt-get update && sudo apt-get install -y kubectl
+	        docker create --name temp-container ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest
+	        docker cp temp-container:./fastfood.sql ./fastfood.sql
+	        docker rm temp-container
+	
+	    - name: Execute SQL Script
+	      run: |
+	        gcloud sql databases create fastfood --instance=final-sql
+	        gcloud sql import sql final-sql ./fastfood.sql  
+
+deploy_to_cloud_run:
+    needs: publish_to_gcr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
   
       - name: Set Google Cloud project and authenticate
         run: |
@@ -109,18 +144,27 @@ jobs:
           gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
           gcloud config set run/region us-central1
  
-      - name: Create GKE Cluster if not exists
-        run: |
-          if gcloud container clusters describe my-gke-cluster --zone=us-central1-a; then
-            echo "Cluster already exists"
-          else
-            gcloud container clusters create my-gke-cluster --num-nodes=1 --zone=us-central1-a
-            gcloud container clusters get-credentials my-gke-cluster --zone=us-central1-a
-          fi
-          
-      - name: Configure kubectl
-        run: gcloud container clusters get-credentials my-gke-cluster --zone=us-central1-a
-      
-      - name: Deploy to GKE
-        run: |
-          kubectl apply -f k8s/deployment.yaml --validate=false
+
+			- name: Get Cloud SQL IP Address
+	      id: get-sql-ip
+	      run: |
+	        SQL_IP=$(gcloud sql instances describe my-cloud-sql-instance --format='value(ipAddresses[0].ipAddress)')
+	        echo "SQL_IP=$SQL_IP" >> $GITHUB_ENV
+
+      - name: Deploy all services to Cloud Run
+        run: |     
+          gcloud run deploy my-app-backend \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
+            --platform=managed \
+            --allow-unauthenticated \
+            --memory=4G \
+            --cpu=2 \
+		        --port=8080 \
+            --set-env-vars=DB_HOST=${{ env.SQL_IP }}
+          gcloud run deploy my-app-frontend \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
+            --platform=managed \
+            --allow-unauthenticated \
+            --memory=4G \
+            --cpu=2 \
+            --port=3000
