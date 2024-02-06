@@ -81,53 +81,18 @@ jobs:
         run: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest
           docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest
-          
+          docker pull ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest
+
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-back:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-front:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
-    
+          docker tag ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
+
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest
           docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest
-
-  execute-sql-script:
-    needs: docker-publish
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest
           
-      - name: Set up Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@v0.3.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
-    
-      - name: Execute SQL Script
-        run: |
-          INSTANCE_NAME=db-ing
-          DATABASE_NAME=fastfood
-
-          # Verificar si la base de datos ya existe
-          if gcloud sql databases list --instance=$INSTANCE_NAME | grep -q $DATABASE_NAME; then
-            echo "La base de datos $DATABASE_NAME ya existe."
-          else
-            # Crear la base de datos solo si no existe
-            gcloud sql databases create $DATABASE_NAME --instance=$INSTANCE_NAME
-            echo "Base de datos $DATABASE_NAME creada."
-          fi
-          # Importar datos a la base de datos
-
-          docker create --name temp-container ${{ secrets.DOCKER_USERNAME }}/ingsw3-final-database:latest
-          docker cp temp-container:/docker-entrypoint-initdb.d/fastfood.sql ./fastfood.sql
-          docker rm temp-container
-          gcloud sql import sql db-ing ./fastfood.sql --quiet
-
-
-
   deploy_to_cloud_run:
-    needs: 
-    - publish_to_gcr
-    - execute-sql-script
+    needs: publish_to_gcr
     
     runs-on: ubuntu-latest
     steps:
