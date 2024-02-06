@@ -132,5 +132,4 @@ jobs:
             --memory=4G \
             --cpu=2 \
             --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app" \
-            --port=$PORT \
             --timeout=1800s
