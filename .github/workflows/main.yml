@@ -130,7 +130,7 @@ jobs:
             --platform=managed \
             --allow-unauthenticated \
             --memory=6G \
-            --cpu=3 \
+            --cpu=4 \
             --max-instances=15 \
             --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app" \
             --timeout=500s \
