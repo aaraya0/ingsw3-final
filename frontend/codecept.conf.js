@@ -20,12 +20,5 @@ exports.config = {
   include: {
     I: './steps_file.js'
   },
-  mocha: {
-    reporter: 'mochawesome',
-    reporterOptions: {
-      reportDir: './output',
-      reportFilename: 'mochawesome-report',
-    },
-  },
-  name: 'angular-sample'
+  name: 'frontend'
 }
