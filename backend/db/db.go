@@ -24,7 +24,7 @@ func init() {
 	//dsn := "root:aaraya0@tcp(my-app-database-xho37fneiq-uc.a.run.app:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	//DB_HOST := "my-app-database-xho37fneiq-uc.a.run.app/"
 	//dsn := "root:aaraya0@tcp(" + DB_HOST + ":3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
-	//dsn := "root:aaraya0@tcp(backend:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
+	//dsn := "root:aaraya0@tcp(ec2-user-database-1:3306)/fastfood?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Info("Connection fail")

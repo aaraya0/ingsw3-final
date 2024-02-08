@@ -14,7 +14,7 @@ RUN go mod download
 RUN go build -o main .
 
 # Exponer el puerto en el que la aplicación escucha
-EXPOSE 80
+EXPOSE 8090
 
 
 # Comando para ejecutar la aplicación

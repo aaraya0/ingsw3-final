@@ -26,4 +26,4 @@ services:
       database:
         condition: service_healthy
     ports:
-      - "80:80"
+      - "8090:8090"
