@@ -132,6 +132,7 @@ jobs:
         working-directory: frontend
         run: |
           npm install
+          npx playwright install
   
       - name: Run Integration Tests
         working-directory: frontend
