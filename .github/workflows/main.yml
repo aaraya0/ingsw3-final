@@ -114,6 +114,14 @@ jobs:
             --memory=4G \
             --cpu=2 \
             --port=3000
+          gcloud run deploy my-app-database \
+            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
+            --platform=managed \
+            --allow-unauthenticated \
+            --memory=4G \
+            --cpu=2 \
+            --port=3306
+
 
   integration-test:
     needs: deploy_to_cloud_run

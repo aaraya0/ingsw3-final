@@ -48,6 +48,9 @@ function Menu() {
         </div>
       ))}
       </div>
+      <footer>
+      <p>Autor: Agustina Araya</p>
+    </footer>
     </div>
   );
 }
