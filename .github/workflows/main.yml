@@ -118,24 +118,21 @@ jobs:
   integration-test:
     needs: deploy_to_cloud_run
     runs-on: ubuntu-latest
-
+  
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
+  
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-
-      - name: Install CodeceptJS
+          node-version: 'latest'
+  
+      - name: Install Dependencies and CodeceptJS
         working-directory: frontend
-        run: npm install codeceptjs
-
-      - name: Install Dependencies
-        working-directory: frontend
-        run: npm install
-
+        run: |
+          npm install
+  
       - name: Run Integration Tests
         working-directory: frontend
-        run: codeceptjs run --steps
+        run: npx codeceptjs run --steps
