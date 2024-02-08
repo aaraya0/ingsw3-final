@@ -49,7 +49,7 @@ function Menu() {
       ))}
       </div>
       <footer>
-      <p>Autor: Agustina Araya</p>
+      <p>Autor:</p>
     </footer>
     </div>
   );
