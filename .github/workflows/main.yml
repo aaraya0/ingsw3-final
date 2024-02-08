@@ -107,14 +107,6 @@ jobs:
  
       - name: Deploy services to Cloud Run
         run: |
-          gcloud run deploy my-app-database \
-            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-database:latest \
-            --platform=managed \
-            --allow-unauthenticated \
-            --memory=4G \
-            --cpu=2 \
-            --port=3306
-            
           gcloud run deploy my-app-frontend \
             --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-front:latest \
             --platform=managed \
@@ -123,19 +115,6 @@ jobs:
             --cpu=2 \
             --port=3000
 
-      - name: Deploy backend service to Cloud Run
-        run: |
-          gcloud run deploy my-app-backend \
-            --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/ingsw3-final-back:latest \
-            --platform=managed \
-            --allow-unauthenticated \
-            --memory=6G \
-            --cpu=4 \
-            --max-instances=15 \
-            --set-env-vars=DB_HOST="my-app-database-xho37fneiq-uc.a.run.app" \
-            --timeout=500s \
-            --port=8090
-  
   integration-test:
     needs: deploy_to_cloud_run
     runs-on: ubuntu-latest
