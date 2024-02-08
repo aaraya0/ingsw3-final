@@ -137,7 +137,7 @@ jobs:
             --port=8090
   
   integration-test:
-    needs: build
+    needs: deploy_to_cloud_run
     runs-on: ubuntu-latest
 
     steps:
