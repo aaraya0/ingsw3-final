@@ -129,7 +129,8 @@ jobs:
           node-version: '16'
 
       - name: Install CodeceptJS
-        run: npm install codeceptjs --global
+        working-directory: frontend
+        run: npm install codeceptjs
 
       - name: Install Dependencies
         working-directory: frontend
