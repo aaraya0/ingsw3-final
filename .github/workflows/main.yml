@@ -127,14 +127,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-          
-      - name: Frontend
-        run: cd frontend
-        
+
       - name: Install CodeceptJS
         run: npm install codeceptjs --global
 
       - name: Install Dependencies
+        working-directory: frontend
         run: npm install
 
       - name: Run Integration Tests
