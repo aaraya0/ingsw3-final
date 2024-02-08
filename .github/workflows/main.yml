@@ -136,4 +136,5 @@ jobs:
         run: npm install
 
       - name: Run Integration Tests
+        working-directory: frontend
         run: codeceptjs run --steps
